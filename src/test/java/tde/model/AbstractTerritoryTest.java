@@ -132,7 +132,7 @@ abstract class AbstractTerritoryTest {
         assertEquals(7, r.getHeight(), 0.05);
     }
 
-    @Test @Disabled
+    @Test
     void contains() {
         cut = create();
         cut.setBoundaries(createSingleLandArea());

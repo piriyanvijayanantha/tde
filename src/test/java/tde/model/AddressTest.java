@@ -44,7 +44,7 @@ Modified: 20260403
                 , cut.toString());
     }
 
-    @Test @Disabled
+    @Test
     void testDraw() {
         Pane pane = new Pane();
         Transform transform = new Translate();
@@ -54,7 +54,7 @@ Modified: 20260403
         assertInstanceOf(Shape.class, node);
     }
 
-    @Test @Disabled
+    @Test
     void testContains() {
         assertTrue(cut.contains(265, 135));
         assertFalse(cut.contains(280, 90));

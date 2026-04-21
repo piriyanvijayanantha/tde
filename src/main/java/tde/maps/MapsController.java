@@ -1,21 +1,25 @@
 package tde.maps;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import tde.TDEController;
+
+import java.util.List;
 
 public class MapsController {
     private static final double INCREASE_BY_10_PERCENT = 1.1;  // 10% bigger
     private static final double DECREASE_BY_10_PERCENT = 0.9;  // 10% smaller
 
     private final TDEController mainController;
-    private Map<?> map;
+    private List<Map<?>> maps;
     private final StackPane root;
 
     private Point2D pivot = new Point2D(0, 0);
@@ -29,6 +33,8 @@ public class MapsController {
 
     private double scaleFactor = Double.NaN;
 
+    private VBox checkBoxGroup = new VBox();
+
     public MapsController(StackPane aRoot, TDEController mainController) {
         this.mainController = mainController;
         root = aRoot;
@@ -41,22 +47,33 @@ public class MapsController {
         root.setOnScroll(e -> onScroll(e));
         root.setOnMouseExited(_ -> onMouseExited());
 
+        checkBoxGroup.setMaxWidth(VBox.USE_PREF_SIZE);
+        checkBoxGroup.setMaxHeight(VBox.USE_PREF_SIZE);
+
+
+
         mainController.updateMouseProperties(scaleFactor, null, null);
     }
 
-    public void setMap(Map<?> newMap) {
-        clearMap();
-        map = newMap;
-        initLayer(map);
+    public void setMap(List<Map<?>> newMaps) {
+        clearMaps();
+        maps = newMaps;
+        for (Map<?> map : maps) {
+            initLayer(map);
+        }
 
         var t = computeInitialScaleFactorAndPosition();
         drawScene(t);
+        root.getChildren().add(checkBoxGroup);
+        StackPane.setAlignment(checkBoxGroup, Pos.CENTER_RIGHT);
+
         mainController.updateMouseProperties(scaleFactor, mouse,  coordAtMouse);
     }
 
-    private void clearMap() {
-        map = null;
+    private void clearMaps() {
+        maps = null;
         root.getChildren().clear();
+        checkBoxGroup.getChildren().clear();
     }
 
     private void initLayer(Map<?> aMap) {
@@ -66,11 +83,12 @@ public class MapsController {
             aMap.setVisible(newValue);
             drawScene(lv95ToScreen());
         });
+        checkBoxGroup.getChildren().add(checkBox);
         root.getChildren().add(aMap.getPane());
     }
 
     private Transform computeInitialScaleFactorAndPosition() {
-        var boundingBox = map.getBoundingBox();
+        var boundingBox = maps.getLast().getBoundingBox();
         pivot = new Point2D(
                 boundingBox.getX() + boundingBox.getWidth() / 2.0,
                 boundingBox.getY() + boundingBox.getHeight() / 2.0
@@ -116,7 +134,7 @@ public class MapsController {
 
     protected void onMouseClicked() {
         TPEMouseEvent evt = new TPEMouseEvent(mouse, coordAtMouse);
-        map.onMouseClicked(evt);
+        maps.getLast().onMouseClicked(evt);
     }
 
     protected void onMousePressed(MouseEvent e) {
@@ -148,7 +166,9 @@ public class MapsController {
     }
 
     private void drawScene(Transform t) {
-        map.draw(t);
+        for (Map<?> map: maps) {
+            map.draw(t);
+        }
     }
 
     public record TPEMouseEvent(Point2D mouse, Point2D coord) { }

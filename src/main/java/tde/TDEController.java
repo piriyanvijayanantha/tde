@@ -13,6 +13,7 @@ import tde.db.DataService;
 import tde.db.SimpleDataService;
 import tde.importers.CSVLoader;
 import tde.importers.XMLHandler;
+import tde.maps.BuildingMap;
 import tde.maps.Map;
 import tde.maps.MapsController;
 import tde.maps.TerritoryMap;
@@ -45,11 +46,14 @@ public class TDEController {
 
     protected void initialize() {
         var countries = database.getAllCountries();
+        var addresses = database.getAllAddresses();
 
-        Map<Country> map = new TerritoryMap<>("Countries", countries, new Pane());
+        Map<Country> countryMap = new TerritoryMap<>("Countries", countries, new Pane());
+        Map<Address> buildingMap = new BuildingMap<>("addresses", addresses, new Pane());
+
 
         MapsController maps = new MapsController(center, this);
-        maps.setMap(map);
+        maps.setMap(List.of(countryMap, buildingMap));
     }
 
     @FXML
