@@ -191,6 +191,6 @@ public abstract class AbstractTerritory implements Territory {
 
     @Override
     public boolean contains(double x, double y) {
-        return false;
+        return shape.contains(x, y);
     }
 }
