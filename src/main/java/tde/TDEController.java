@@ -67,6 +67,7 @@ public class TDEController {
             showErrorMessage("buildings", ioe.getMessage());
         }
         status.setText("Building addresses loaded");
+        initialize();
     }
 
     @FXML
@@ -88,8 +89,8 @@ public class TDEController {
     private File chooseFile(String title) throws IOException {
         var chooser = new FileChooser();
         chooser.setTitle(title);
-        chooser.setInitialDirectory(new File(""));
-        return chooser.showOpenDialog(null);
+        chooser.setInitialDirectory(new File("src/main/resources"));
+        return chooser.showOpenDialog(mainStructure.getScene().getWindow());
     }
 
     @FXML

@@ -88,7 +88,7 @@ public class MapsController {
     }
 
     private Transform computeInitialScaleFactorAndPosition() {
-        var boundingBox = maps.getLast().getBoundingBox();
+        var boundingBox = maps.getFirst().getBoundingBox();
         pivot = new Point2D(
                 boundingBox.getX() + boundingBox.getWidth() / 2.0,
                 boundingBox.getY() + boundingBox.getHeight() / 2.0

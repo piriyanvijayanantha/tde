@@ -28,7 +28,7 @@ import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 public record Address(Coordinates location, LocalDate modified, String number, boolean official, String status,
                       String category, String buildingName, String canton, String communityName, String streetName,
                       String zipLabel) implements Drawable {
-    public static final double SHAPE_SIZE = 1000.0;
+    public static final double SHAPE_SIZE = 100.0;
     private static final String MODIFICATION_DATE_EXC = "Modification date must not be in the future";
     private static final String NUMBER_NAME_EXC = "Either number or building name must be present";
     private static final String EMPTY_EXC = "Canton, community name, street name and zip label must not be null";
