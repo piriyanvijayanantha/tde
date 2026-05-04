@@ -29,8 +29,12 @@ public final class CSVLoader {
         var addresses = new ArrayList<Address>();
         try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
             var line = reader.readLine();
+            var counter = 0;
             while ((line = reader.readLine()) != null) {
-                addresses.add(mapStringLineToAddress(line));
+                if(counter % 100 == 0){
+                    addresses.add(mapStringLineToAddress(line));
+                }
+                counter++;
             }
         }
         return addresses;

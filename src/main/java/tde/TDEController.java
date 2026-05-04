@@ -25,35 +25,45 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TDEController {
 
-    @FXML private Label status;
-    @FXML private Label mouseX;
-    @FXML private Label mouseY;
-    @FXML private Label coordE;
-    @FXML private Label coordN;
-    @FXML private Label scaleLabel;
-    @FXML private BorderPane mainStructure;
+    @FXML
+    private Label status;
+    @FXML
+    private Label mouseX;
+    @FXML
+    private Label mouseY;
+    @FXML
+    private Label coordE;
+    @FXML
+    private Label coordN;
+    @FXML
+    private Label scaleLabel;
+    @FXML
+    private BorderPane mainStructure;
 
-    @FXML private StackPane center;
+    @FXML
+    private StackPane center;
 
     private final XMLHandler saxHandler = new XMLHandler();
     private final CSVLoader csvLoader = new CSVLoader();
 
     private final DataService database = new SimpleDataService();
+    boolean boundariesLoaded = false;
 
     protected void initialize() {
+        List<Map<?>> maps = new ArrayList<>();
         var countries = database.getAllCountries();
         var addresses = database.getAllAddresses();
 
-        Map<Country> countryMap = new TerritoryMap<>("Countries", countries, new Pane());
-        Map<Address> buildingMap = new BuildingMap<>("addresses", addresses, new Pane());
+        maps.add(new TerritoryMap<>("Countries", countries, new Pane()));
+        maps.add(new BuildingMap<>("addresses", addresses, new Pane()));
 
-
-        MapsController maps = new MapsController(center, this);
-        maps.setMap(List.of(countryMap, buildingMap));
+        MapsController mapsController = new MapsController(center, this);
+        mapsController.setMap(maps);
     }
 
     @FXML
@@ -78,10 +88,12 @@ public class TDEController {
             SAXParser saxParser = factory.newSAXParser();
             File file = chooseFile("Load XML File containing boundary data");
             saxParser.parse(file, saxHandler);
+            database.storeTerritoriesFromLoader(saxHandler);
         } catch (IOException | ParserConfigurationException | SAXException e) {
+            boundariesLoaded = false;
             showErrorMessage("boundaries", e.getMessage());
         }
-        // TODO: store loaded data in SimpleDataService
+        boundariesLoaded = true;
         status.setText("Boundaries loaded");
         initialize();
     }

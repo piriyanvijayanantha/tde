@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
@@ -103,10 +104,16 @@ public class MapsController {
     }
 
     private Transform screenToLV95() {
-        Scale s = new Scale(scaleFactor, -scaleFactor, screenpivot.getX(), screenpivot.getY());
-        Translate t = new Translate(pivot.getX(), pivot.getY());
+//        Scale s = new Scale(scaleFactor, -scaleFactor, screenpivot.getX(), screenpivot.getY());
+//        Translate t = new Translate(pivot.getX(), pivot.getY());
+//
+//        return t.createConcatenation(s); // transformation local -> LV95
+        try {
+            return lv95ToScreen().createInverse();
+        } catch (NonInvertibleTransformException e) {
+            throw new RuntimeException(e);
+        }
 
-        return t.createConcatenation(s); // transformation local -> LV95
     }
 
     private Transform lv95ToScreen() {

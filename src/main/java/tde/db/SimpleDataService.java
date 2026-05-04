@@ -8,8 +8,10 @@ import tde.model.Country;
 import tde.model.LandArea;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class SimpleDataService implements DataService {
 
@@ -77,11 +79,23 @@ public class SimpleDataService implements DataService {
                     "3", true, "real", "residential", null, "GE", "Genf", "Rue du Rhône", "1204 Genf")
     );
 
-    private final List<Country> countries = List.of(SIMPLE_CH);
+    private List<Country> countries = new ArrayList<>(List.of(SIMPLE_CH));
+    private List<Country> landesgebiete = new ArrayList<>();
+    private List<Country> kantonsgebiete = new ArrayList<>();
+    private List<Country> bezirksgebiete = new ArrayList<>();
+    private List<Country> hoheitsgebiete = new ArrayList<>();
     private List<Address> addresses = TEST_ADDRESSES;
+
 
     @Override
     public void storeTerritoriesFromLoader(XMLHandler handler) {
+        landesgebiete = handler.getLandesgebiete();
+        kantonsgebiete = handler.getKantonsgebiete();
+        bezirksgebiete = handler.getBezirksgebiete();
+        hoheitsgebiete = handler.getHoheitsgebiete();
+        countries = new ArrayList<>();
+        Stream.of(landesgebiete, kantonsgebiete, bezirksgebiete, hoheitsgebiete)
+                .forEach(countries::addAll);
     }
 
     @Override
@@ -96,6 +110,7 @@ public class SimpleDataService implements DataService {
 
     @Override
     public List<Country> getAllCountries() {
+
         return countries;
     }
 
@@ -104,5 +119,21 @@ public class SimpleDataService implements DataService {
         return countries.stream()
                 .filter(c -> c.getName().equals(name))
                 .findFirst();
+    }
+
+    public List<Country> getLandesgebiete() {
+        return landesgebiete;
+    }
+
+    public List<Country> getKantonsgebiete() {
+        return kantonsgebiete;
+    }
+
+    public List<Country> getBezirksgebiete() {
+        return bezirksgebiete;
+    }
+
+    public List<Country> getHoheitsgebiete() {
+        return hoheitsgebiete;
     }
 }
