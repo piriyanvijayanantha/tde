@@ -3,6 +3,9 @@ package tde.maps;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
+import tde.maps.zoom.XYZTiles;
+import tde.maps.zoom.ZoomStrategy;
 import tde.model.Address;
 
 import java.util.List;
@@ -10,11 +13,13 @@ import java.util.List;
 public class BuildingMap<T extends Address> extends AbstractMap<T> {
     List<T> addresses;
     private final Pane pane;
+    private final ZoomStrategy<T> zoomStrategy;
 
 
     public BuildingMap(String name, List<T> addresses, Pane pane) {
         setName(name);
         this.addresses = addresses;
+        zoomStrategy = new XYZTiles<>();
         this.pane = pane;
         setVisible(true);
     }
@@ -53,5 +58,11 @@ public class BuildingMap<T extends Address> extends AbstractMap<T> {
     @Override
     public Pane getPane() {
         return pane;
+    }
+
+    @Override
+    public void draw(Transform trans) {
+        addresses = zoomStrategy.getZoomedObjects(addresses);
+        super.draw(trans);
     }
 }
