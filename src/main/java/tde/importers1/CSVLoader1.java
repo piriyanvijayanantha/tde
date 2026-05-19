@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class CSVLoader {
+public final class CSVLoader1 {
     private static final int STN_LABEL = 4;
     private static final int ADR_NUMBER = 5;
     private static final int BDG_CATEGORY = 6;
@@ -33,7 +33,7 @@ public final class CSVLoader {
     private static final DateTimeFormatter CH_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     // prevent instantiation
-    private CSVLoader() { }
+    private CSVLoader1() { }
 
     public static List<Address1> readAddressData(File file) throws IOException {
 //        return read_CSVFormat(new FileReader(file));

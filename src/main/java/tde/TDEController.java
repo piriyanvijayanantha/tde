@@ -11,7 +11,9 @@ import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 import tde.db.DataService;
 import tde.db.SimpleDataService;
+import tde.importers.AddressCSVLoader;
 import tde.importers.CSVLoader;
+import tde.importers.LoaderException;
 import tde.importers.XMLHandler;
 import tde.maps.BuildingMap;
 import tde.maps.Map;
@@ -49,7 +51,7 @@ public class TDEController {
     private StackPane center;
 
     private final XMLHandler saxHandler = new XMLHandler();
-    private final CSVLoader csvLoader = new CSVLoader();
+    private final AddressCSVLoader csvLoader = new AddressCSVLoader();
 
     private final DataService database = new SimpleDataService();
     boolean boundariesLoaded = false;
@@ -71,13 +73,14 @@ public class TDEController {
         status.setText("Load buildings addresses...");
         try {
             File file = chooseFile("Load CSV File containing building data");
-            List<Address> addresses = csvLoader.readAddressData(file);
+            if (file == null) { status.setText("Abgebrochen."); return; }
+            List<Address> addresses = csvLoader.readData(file);
             database.storeAddressesFromLoader(addresses);
-        } catch (IOException ioe) {
-            showErrorMessage("buildings", ioe.getMessage());
+            status.setText("Building addresses loaded: " + addresses.size());
+            initialize();
+        } catch (LoaderException e) {
+            showErrorMessage("buildings", e.getMessage());
         }
-        status.setText("Building addresses loaded");
-        initialize();
     }
 
     @FXML
@@ -98,7 +101,7 @@ public class TDEController {
         initialize();
     }
 
-    private File chooseFile(String title) throws IOException {
+    private File chooseFile(String title) {
         var chooser = new FileChooser();
         chooser.setTitle(title);
         chooser.setInitialDirectory(new File("src/main/resources"));

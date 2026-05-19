@@ -1,5 +1,6 @@
 package tde.importers;
 
+
 import tde.model.Address;
 import tde.model.Coordinates;
 
@@ -10,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class CSVLoader {
+public final class AddressCSVLoader implements CSVLoader<Address> {
     private static final int COL_EAST = 15;
     private static final int COL_NORTH = 16;
     private static final int COL_MODIFIED = 14;  // ADR_MODIFIED
@@ -25,17 +26,25 @@ public final class CSVLoader {
     private static final int COL_ZIP = 8;   // ZIP_LABEL
 
 
-    public List<Address> readAddressData(File file) throws IOException {
+    private static final int MIN_COLUMNS = 17; // COL_NORTH = 16 is the highest index needed
+
+    public List<Address> readData(File file) {
         var addresses = new ArrayList<Address>();
         try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
-            var line = reader.readLine();
+            reader.readLine(); // skip header
+            String line;
             var counter = 0;
             while ((line = reader.readLine()) != null) {
-                if(counter % 100 == 0){
-                    addresses.add(mapStringLineToAddress(line));
+                if (counter % 100 == 0) {
+                    var cols = line.split(";", -1);
+                    if (cols.length >= MIN_COLUMNS) {
+                        addresses.add(mapStringLineToAddress(line));
+                    }
                 }
                 counter++;
             }
+        } catch (IOException e) {
+            throw new LoaderException(file.getName() + " konnte nicht geladen werden.", e);
         }
         return addresses;
     }
