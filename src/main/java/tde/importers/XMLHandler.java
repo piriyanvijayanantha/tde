@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+// PRÜFUNG: SAX-Parsing – ContentHandler für swissBOUNDARIES3D XML; extends DefaultHandler (SAX-API)
+// Zuständig für: startElement(), endElement(), characters() – Prüfungsthema SAX
 public class XMLHandler extends DefaultHandler {
     private List<LandArea.Area> areas = new ArrayList<>();
 
+    // PRÜFUNG: SAX StringBuilder – akkumuliert den Textinhalt zwischen Start- und End-Tag
     private StringBuilder sb = new StringBuilder();
     private static final String PRETAG = "swissBOUNDARIES3D_ili2_LV95_V1_5.TLM_GRENZEN.TLM_";
     private static final String HOHEITSGEBIET = PRETAG + "HOHEITSGEBIET";
@@ -36,12 +39,14 @@ public class XMLHandler extends DefaultHandler {
 
 
     @Override
+    // PRÜFUNG: SAX characters() – hängt Textfragmente an StringBuilder an (kann mehrfach pro Element aufgerufen werden)
     public void characters(char[] ch, int start, int length) throws SAXException {
         sb.append(ch, start, length);
     }
 
 
     @Override
+    // PRÜFUNG: SAX startElement() – StringBuilder zurücksetzen; Zustand für neues Element initialisieren
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         sb = new StringBuilder();
 
@@ -57,6 +62,7 @@ public class XMLHandler extends DefaultHandler {
 
 
     @Override
+    // PRÜFUNG: SAX endElement() – akkumulierten Text aus StringBuilder auswerten und Objekte konstruieren
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
             case "C1" -> c1 = Double.parseDouble(sb.toString());

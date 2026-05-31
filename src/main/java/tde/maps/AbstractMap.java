@@ -5,6 +5,8 @@ import tde.model.Drawable;
 
 import java.util.List;
 
+// PRÜFUNG: OCP – AbstractMap<T extends Drawable> implementiert gemeinsame Logik; Unterklassen fügen nur Spezifisches hinzu
+// PRÜFUNG: Generics – gebundener Typparameter <T extends Drawable> stellt sicher, dass T draw() und contains() hat
 public abstract class AbstractMap<T extends Drawable> implements Map<T> {
     private static final String TRANSPARENCY_EXC = "Transparency must be within range [0.0, 1.0]";
     private String name = "Unknown";

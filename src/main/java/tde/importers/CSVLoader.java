@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// PRÜFUNG: CSV-Einlesen – liest Gebäudeadressen zeilenweise aus einer ;-separierten CSV-Datei
+// readAddressData() deklariert IOException (checked); wird in TDEController.onLoadBuildings() gefangen
 public final class CSVLoader {
     private static final int COL_EAST = 15;
     private static final int COL_NORTH = 16;
@@ -25,16 +27,14 @@ public final class CSVLoader {
     private static final int COL_ZIP = 8;   // ZIP_LABEL
 
 
+    // PRÜFUNG: CSV-Einlesen – wirft IOException (checked Exception); Zeile für Zeile mit BufferedReader
     public List<Address> readAddressData(File file) throws IOException {
         var addresses = new ArrayList<Address>();
         try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
             var line = reader.readLine();
             var counter = 0;
             while ((line = reader.readLine()) != null) {
-                if(counter % 100 == 0){
                     addresses.add(mapStringLineToAddress(line));
-                }
-                counter++;
             }
         }
         return addresses;

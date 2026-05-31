@@ -10,6 +10,8 @@ import javafx.scene.transform.Transform;
  * precisely Countries, Cantons, Districts or Municipalieties) or Addresses, etc.
  * @param <T> The type of objects that are managed with this map.
  */
+// PRÜFUNG: OCP – Interface Map<T> definiert den Vertrag; neue Map-Typen erweitern, ohne dieses Interface zu ändern
+// PRÜFUNG: Generics – Map<T> macht die Klasse typsicher für beliebige Karteninhalte
 public interface Map<T> {
     /**
      * Informs about the visibility state of this map.

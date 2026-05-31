@@ -7,6 +7,7 @@ import tde.model.Territory;
 
 import java.util.List;
 
+// PRÜFUNG: OCP + Generics – TerritoryMap<T extends Territory> ist konkrete Erweiterung ohne Änderung von AbstractMap
 public class TerritoryMap<T extends Territory> extends AbstractMap<T> {
     private final List<T> territories;
     private final Pane pane;

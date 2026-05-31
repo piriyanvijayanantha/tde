@@ -10,6 +10,8 @@ import java.util.Optional;
 /**
  * All access to a persistent Layer goes through this interface.
  */
+// PRÜFUNG: OCP – DataService-Interface kapselt Datenzugriff; SimpleDataService ist eine Implementierung
+// Neue Implementierungen (z.B. DB-basiert) können hinzugefügt werden, ohne bestehenden Code zu ändern
 public interface DataService {
     /**
      * Retrieve a single list of all countries.

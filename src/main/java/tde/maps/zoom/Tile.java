@@ -18,4 +18,15 @@ public class Tile {
     BoundingBox getBounds() {
         return bounds;
     }
+
+    public void addAddress(Address address) {
+        addresses.add(address);
+    }
+    public void addAddresses(List<Address> newAddresses) {
+        addresses.addAll(newAddresses);
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
 }
